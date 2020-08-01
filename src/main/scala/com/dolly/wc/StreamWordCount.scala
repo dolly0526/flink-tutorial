@@ -26,7 +26,10 @@ object StreamWordCount {
       .sum(1)
 
     // 打印结果
-    wordCountDataStream.print()
+    wordCountDataStream
+      .print()
+      // 默认为cpu核心数量
+      .setParallelism(2)
 
     // 启动executor
     // nc -lk 7777
