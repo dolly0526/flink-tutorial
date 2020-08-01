@@ -3,12 +3,10 @@ package com.dolly.wc
 import org.apache.flink.api.scala._
 
 /**
- *
+ * 批处理word count程序
  * @author yusenyang 
  * @create 2020/8/1 18:06
  */
-
-// 批处理word count程序
 object WordCount {
 
   def main(args: Array[String]): Unit = {
@@ -22,10 +20,11 @@ object WordCount {
     // 切分数据得到word，然后再按word做分组聚合
     val wordCountDataSet = inputDataSet
       .flatMap(_.split(" "))
-      .map((_, 1))
+      .map((_,1))
       .groupBy(0)
       .sum(1)
 
+    // 打印结果
     wordCountDataSet.print()
   }
 }
