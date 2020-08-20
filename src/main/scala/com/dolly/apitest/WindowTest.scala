@@ -1,9 +1,11 @@
 package com.dolly.apitest
 
 import org.apache.flink.streaming.api.TimeCharacteristic
+import org.apache.flink.streaming.api.functions.KeyedProcessFunction
 import org.apache.flink.streaming.api.functions.timestamps.BoundedOutOfOrdernessTimestampExtractor
 import org.apache.flink.streaming.api.scala._
 import org.apache.flink.streaming.api.windowing.time.Time
+import org.apache.flink.util.Collector
 
 /**
  *
@@ -25,6 +27,7 @@ object WindowTest {
         val dataArray = data.split(',')
         SensorReading(dataArray(0).trim, dataArray(1).trim.toLong, dataArray(2).trim.toDouble)
       })
+//      .assignAscendingTimestamps(_.timestamp * 1000)
       .assignTimestampsAndWatermarks(new BoundedOutOfOrdernessTimestampExtractor[SensorReading](Time.seconds(1)) {
         override def extractTimestamp(element: SensorReading): Long = {
           element.timestamp * 1000
@@ -40,6 +43,10 @@ object WindowTest {
 
     minTempPerWindowStream.print("min temp")
     dataStream.print("input data")
+
+    dataStream
+      .keyBy(_.id)
+      .process(new MyProcess)
 
     env.execute("window test")
   }
@@ -69,3 +76,9 @@ object WindowTest {
 //    element.timestamp * 1000
 //  }
 //}
+
+class MyProcess() extends KeyedProcessFunction[String, SensorReading, String] {
+  override def processElement(value: SensorReading, ctx: KeyedProcessFunction[String, SensorReading, String]#Context, out: Collector[String]): Unit = {
+    ctx.timerService().registerEventTimeTimer(2000)
+  }
+}
