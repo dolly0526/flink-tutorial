@@ -40,6 +40,7 @@ object ProcessFunctionTest {
 
     val processStream2 = dataStream
         .keyBy(_.id)
+        .process(new TempChangeAlert(10.0))
 
     dataStream.print("input data")
     processStream.print("processed data")
@@ -86,5 +87,26 @@ class TempIncreAlert() extends KeyedProcessFunction[String, SensorReading, Strin
     // 输出报警信息
     out.collect(ctx.getCurrentKey + ": 温度连续上升")
     currentTimer.clear()
+  }
+}
+
+class TempChangeAlert(threshold: Double) extends KeyedProcessFunction[String, SensorReading, (String, Double, Double)] {
+
+  // 定义一个状态变量，保存上次温度值
+  lazy val lastTempState: ValueState[Double] = getRuntimeContext.getState(new ValueStateDescriptor[Double]("lastTemp", classOf[Double]))
+
+  override def processElement(value: SensorReading, ctx: KeyedProcessFunction[String, SensorReading, (String, Double, Double)]#Context, out: Collector[(String, Double, Double)]): Unit = {
+
+    // 获取上次的温度
+    val lastTemp = lastTempState.value()
+
+    // 用当前的温度值和上次的求差，如果大于阈值，输出报警信息
+    val diff = (value.temperature - lastTemp).abs
+    if (diff > threshold) {
+      out.collect((value.id, lastTemp, value.temperature))
+    }
+
+    // 更新当前温度
+    lastTempState.update(value.temperature)
   }
 }
