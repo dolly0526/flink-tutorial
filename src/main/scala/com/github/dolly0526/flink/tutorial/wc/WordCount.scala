@@ -1,4 +1,4 @@
-package com.dolly.wc
+package com.github.dolly0526.flink.tutorial.wc
 
 import org.apache.flink.api.scala._
 
@@ -14,7 +14,7 @@ object WordCount {
     val env = ExecutionEnvironment.getExecutionEnvironment
 
     // 从文件中读取数据
-    val inputPath = "/Users/sgcx017/github/flink-tutorial/src/main/resources/hello.txt"
+    val inputPath = "src/main/resources/hello.txt"
     val inputDataSet = env.readTextFile(inputPath)
 
     // 切分数据得到word，然后再按word做分组聚合

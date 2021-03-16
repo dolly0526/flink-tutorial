@@ -1,4 +1,4 @@
-package com.dolly.apitest
+package com.github.dolly0526.flink.tutorial.apitest
 
 import java.util.{Properties, Random}
 

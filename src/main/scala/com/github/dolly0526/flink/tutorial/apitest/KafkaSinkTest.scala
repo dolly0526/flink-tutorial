@@ -1,4 +1,4 @@
-package com.dolly.apitest
+package com.github.dolly0526.flink.tutorial.apitest
 
 import org.apache.flink.api.common.serialization.SimpleStringSchema
 import org.apache.flink.streaming.api.scala._

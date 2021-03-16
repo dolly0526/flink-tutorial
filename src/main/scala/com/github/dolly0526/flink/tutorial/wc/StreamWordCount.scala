@@ -1,4 +1,4 @@
-package com.dolly.wc
+package com.github.dolly0526.flink.tutorial.wc
 
 import org.apache.flink.streaming.api.scala._
 
