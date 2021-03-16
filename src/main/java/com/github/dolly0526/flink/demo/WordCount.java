@@ -16,7 +16,7 @@ public class WordCount {
         ExecutionEnvironment env = ExecutionEnvironment.getExecutionEnvironment();
 
         // 从文件中读取数据
-        String inputPath = "src/main/resources/hello.txt";
+        String inputPath = "/Users/sgcx017/github/flink-demo/flink-tutorial/src/main/resources/hello.txt";
         DataSet<String> inputDataSet = env.readTextFile(inputPath);
 
         // 空格分词打散之后，对单词进行 groupby 分组，然后用 sum 进行聚合

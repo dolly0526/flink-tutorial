@@ -14,7 +14,7 @@ object WordCount {
     val env = ExecutionEnvironment.getExecutionEnvironment
 
     // 从文件中读取数据
-    val inputPath = "src/main/resources/hello.txt"
+    val inputPath = "/Users/sgcx017/github/flink-demo/flink-tutorial/src/main/resources/hello.txt"
     val inputDataSet = env.readTextFile(inputPath)
 
     // 切分数据得到word，然后再按word做分组聚合
